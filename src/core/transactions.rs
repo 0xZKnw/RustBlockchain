@@ -1,5 +1,8 @@
+use serde::Serialize;
+
 pub type Address = [u8; 20];
 
+#[derive(Serialize, Debug, Clone)]
 pub struct Tx {
     pub from: Address,
     pub to: Address,
