@@ -10,3 +10,13 @@ pub struct Tx {
     pub data: String,
     pub signature: Option<Vec<u8>>,
 }
+
+pub fn new_tx(from: Address, to: Address, amount: u64, data: String) -> Tx {
+    Tx {
+        from,
+        to,
+        amount,
+        data,
+        signature: None,
+    }
+}
