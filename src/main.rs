@@ -1,7 +1,9 @@
 use rustblockchain::core::block::new_block;
+use rustblockchain::core::chain::init_chain;
 use rustblockchain::core::transactions::Tx;
 
 fn main() {
+    let genesis = new_block(vec![], [0; 32], String::from("genesis"));
     let tx = Tx {
         from: [0; 20],
         to: [0; 20],
@@ -17,14 +19,13 @@ fn main() {
         signature: None,
     };
 
-
     let txs = vec![tx, tx2];
+    let block = new_block(txs, genesis.previous_hash, String::from("salut"));
 
-    let previous_hash = [0; 32];
+    let mut blockchain = init_chain();
+    blockchain.add_block(genesis);
+    blockchain.add_block(block);
 
-    let block = new_block(txs, previous_hash);
+    println!("{:#?}", blockchain);
 
-    println!("Bloc créé avec succès !");
-    println!("Hash du bloc: {:?}", hex::encode(block.hash));
-    println!("Transactions: {:?}", block.txs);
 }

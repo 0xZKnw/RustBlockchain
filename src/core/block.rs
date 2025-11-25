@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use sha3::{Digest, Keccak256};
 use serde::Serialize;
-use crate::core::{block, transactions::Tx};
+use crate::core::{transactions::Tx};
 
 #[derive(Serialize, Debug)]
 pub struct Block {
@@ -9,6 +9,7 @@ pub struct Block {
     pub previous_hash : [u8; 32],
     pub txs : Vec<Tx>,
     pub timestamp: DateTime<Utc>,
+    pub data: String,
 }
 
 impl Block {
@@ -18,7 +19,8 @@ impl Block {
         let data_to_hash = (
             &self.previous_hash,
             &self.txs,
-            &self.timestamp.timestamp()
+            &self.timestamp.timestamp(),
+            &self.data,
         );
 
         let serialized_data = bincode::serialize(&data_to_hash).unwrap();
@@ -30,7 +32,7 @@ impl Block {
     }
 }
 
-pub fn new_block(txs : Vec<Tx>, previous_hash : [u8; 32]) -> Block {
+pub fn new_block(txs : Vec<Tx>, previous_hash : [u8; 32], data: String) -> Block {
     let now_utc = Utc::now();
 
     let mut new_block = Block {
@@ -38,6 +40,7 @@ pub fn new_block(txs : Vec<Tx>, previous_hash : [u8; 32]) -> Block {
         previous_hash,
         txs,
         timestamp: now_utc,
+        data,
     };
     new_block.hash = new_block.calcul_hash();
 
